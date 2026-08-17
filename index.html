@@ -433,6 +433,144 @@ footer .copyright{
   .poem-title{ font-size:1.55rem; }
   .poem-body{ font-size:1.08rem; }
 }
+
+/* =========================================================
+   DARK MODE
+   Toggle applies data-theme="dark" on <html>; most colours
+   already ride on CSS vars, these overrides catch the rest.
+   ========================================================= */
+[data-theme="dark"]{
+  --ink:#f2ecf5;
+  --paper:#1a0f21;
+  --paper-soft:#241531;
+  --muted:#b6a5c4;
+  --line:#3a2a46;
+  --text:#efe6f3;
+}
+[data-theme="dark"] header.site-head{ background:rgba(26,15,33,.92); }
+[data-theme="dark"] .poem-card{ background:#241531; }
+[data-theme="dark"] .poem-body{ color:#e4d8ec; }
+[data-theme="dark"] .field input,
+[data-theme="dark"] .field textarea{ background:#2a1a33; color:#f2ecf5; }
+[data-theme="dark"] .setup-box{ color:#e6d8f0; }
+[data-theme="dark"] .setup-box code,
+[data-theme="dark"] .setup-box pre{ background:#2a1a33; color:#efe6f3; }
+[data-theme="dark"] .skeleton{
+  background:linear-gradient(100deg, var(--paper-soft) 25%, #33223d 37%, var(--paper-soft) 63%);
+}
+[data-theme="dark"] .icon-btn{ background:#2a1a33; }
+[data-theme="dark"] .icon-btn .tooltip{ background:#f2ecf5; color:#1a0f21; }
+/* footer stays quiet/subtle in dark mode too, on purpose */
+[data-theme="dark"] footer .copyright{ color:var(--muted); opacity:.5; }
+[data-theme="dark"] .visit-count{ color:var(--muted); opacity:.55; }
+[data-theme="dark"] .admin-pill{ color:var(--muted); }
+[data-theme="dark"] .search-wrap input{ background:#2a1a33; color:#f2ecf5; }
+[data-theme="dark"] .poem-num{ background:#3a2a46; color:#f0e6f5; }
+
+/* shared gradient text (header "Shishi's" + hero heading) */
+.brand-title em, .grad-word{
+  font-style:italic;
+  background:linear-gradient(100deg, var(--pink-deep), var(--lilac-deep));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* hero heading + coloured tagline */
+.hero-brand{
+  font-family:var(--serif); font-weight:700;
+  font-size:clamp(1.7rem, 6vw, 2.7rem);
+  margin:0 0 .5rem; color:var(--ink);
+}
+.hero .tagline{
+  font-family:var(--body-serif); font-style:italic; font-weight:600;
+  margin:0 auto; max-width:34em;
+  font-size:clamp(.95rem,2.6vw,1.1rem);
+}
+.hero .tagline span{ opacity:.92; }
+
+/* theme toggle icon button + hover tooltip */
+.head-actions{ display:flex; align-items:center; gap:.5rem; }
+.icon-btn{
+  position:relative;
+  width:38px; height:38px; border-radius:50%;
+  border:1.5px solid var(--line); background:var(--paper-soft); color:var(--ink);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.05rem; line-height:1; cursor:pointer; flex:none;
+  transition:transform .15s ease, background .15s ease;
+}
+.icon-btn:hover{ transform:translateY(-1px) rotate(-8deg); }
+.icon-btn .tooltip{
+  position:absolute; top:120%; left:50%; transform:translateX(-50%) translateY(-4px);
+  background:var(--ink); color:var(--paper); font-size:.66rem; white-space:nowrap;
+  padding:.3rem .6rem; border-radius:6px; opacity:0; pointer-events:none;
+  transition:opacity .15s ease, transform .15s ease; z-index:50;
+}
+.icon-btn:hover .tooltip, .icon-btn:focus-visible .tooltip{
+  opacity:1; transform:translateX(-50%) translateY(0);
+}
+
+/* search */
+.search-wrap{ max-width:840px; margin:0 auto; padding:0 1rem 1rem; }
+.search-wrap input{
+  width:100%; border:1.5px solid var(--line); border-radius:999px;
+  padding:.65rem 1.1rem; font-family:var(--ui); font-size:.9rem;
+  background:#fff; color:var(--text);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.search-wrap input:focus{ border-color:var(--lilac-deep); box-shadow:0 0 0 3px rgba(156,111,194,.18); }
+@media (min-width:900px){ .search-wrap{ max-width:760px; } }
+
+/* poem numbering badge */
+.poem-num{
+  font-family:var(--ui); font-weight:700; letter-spacing:normal;
+  text-transform:none; background:var(--paper-soft);
+  color:var(--plum); border-radius:999px; padding:.1rem .55rem;
+  font-size:.68rem;
+}
+
+/* engaging card interactions: tilt on hover + ripple on tap/click,
+   plus a soft light-sweep across the card while hovered */
+.poem-card{
+  transition:transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.poem-card:hover{
+  box-shadow:0 20px 44px -16px rgba(156,111,194,.5);
+}
+.poem-card::after{
+  content:"";
+  position:absolute; inset:0;
+  background:linear-gradient(120deg, transparent 30%, rgba(255,255,255,.4) 45%, transparent 60%);
+  background-size:240% 240%; background-position:130% 0;
+  opacity:0; transition:opacity .3s ease, background-position .7s ease;
+  pointer-events:none; z-index:1;
+}
+.poem-card:hover::after{ opacity:1; background-position:-30% 0; }
+.ripple{
+  position:absolute; border-radius:50%;
+  background:rgba(156,111,194,.32);
+  transform:scale(0); animation:rippleAnim .6s ease-out forwards;
+  pointer-events:none; z-index:2;
+}
+@keyframes rippleAnim{ to{ transform:scale(2.6); opacity:0; } }
+@media (prefers-reduced-motion: reduce){
+  .poem-card{ transition:none; }
+  .poem-card::after{ display:none; }
+}
+
+/* visitor count line, sits quietly above the copyright */
+.visit-count{
+  font-size:.68rem; color:var(--muted); opacity:.6;
+  margin:0 0 .4rem; letter-spacing:.02em;
+}
+
+/* logout, restyled as a proper small button instead of a bare link */
+#logoutBtn{
+  border:1.5px solid var(--line); border-radius:999px;
+  padding:.15rem .65rem; margin-left:.35rem;
+  font-weight:600; opacity:.85; text-decoration:none;
+}
+#logoutBtn:hover{ opacity:1; text-decoration:none; background:var(--paper-soft); }
 </style>
 </head>
 <body>
@@ -469,7 +607,12 @@ footer .copyright{
       </div>
       <!-- Admin sign-in intentionally lives near the footer, not up here,
            so public readers have no reason to notice or poke at it. -->
-    
+      <div class="head-actions">
+        <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch to dark mode">
+          <span class="theme-icon" aria-hidden="true">☾</span>
+          <span class="tooltip" role="tooltip">Toggle light / dark mode</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -484,8 +627,19 @@ footer .copyright{
   </div>
 
   <section class="hero">
-    <h1>Verses, gathered quietly</h1>
-    <p>A small arena for poems — written slowly, kept simply, read at your own pace.</p>
+    <h1 class="hero-brand"><span class="grad-word">Shishi's</span> Poetic Arena</h1>
+    <p class="tagline">
+      <span style="color:var(--pink-deep)">arena</span>
+      <span style="color:var(--gold)">of</span>
+      <span style="color:var(--teal-soft)">poems</span>
+      <span style="color:var(--lilac-deep)">that</span>
+      <span style="color:var(--pink)">flavors</span>
+      <span style="color:var(--teal)">the</span>
+      <span style="color:var(--gold)">flavor</span>
+    </p>
+    <div class="search-wrap">
+      <input type="search" id="poemSearch" placeholder="Search poems by title or a line…" aria-label="Search poems">
+    </div>
     <div class="feather-divider">
       <svg viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
         <path d="M2 20 Q60 2 100 20 Q140 38 198 20" fill="none" stroke="#9c6fc2" stroke-width="1.4"/>
@@ -504,8 +658,9 @@ footer .copyright{
 
   <footer>
     <span class="admin-pill" id="adminPill"><span class="dotlive"></span><span id="adminEmailLabel"></span>
-      <button class="admin-link" id="logoutBtn" type="button" style="display:none;">sign out</button>
+      <button id="logoutBtn" type="button" style="display:none;">Logout</button>
     </span>
+    <p class="visit-count" id="visitCount" aria-live="polite"></p>
     <p class="copyright">
       © Sivakumar, ShiShi — this design, logo and every poem here are protected;
       duplication in any form, for any use, is prohibited.
@@ -728,21 +883,21 @@ service cloud.firestore {
     });
   }
 
-  function renderPoems(poems){
+  function renderPoems(poems, searchActive){
     if (!poems.length) {
       feedEl.innerHTML =
         '<div class="empty-state">' +
           '<div class="feather-divider"><svg viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">' +
           '<path d="M2 20 Q60 2 100 20 Q140 38 198 20" fill="none" stroke="#9c6fc2" stroke-width="1.4"/>' +
           '<circle cx="100" cy="20" r="4" fill="#e8b84b"/></svg></div>' +
-          '<p>Nothing has been written here yet.</p>' +
+          '<p>' + (searchActive ? 'No poems match your search.' : 'Nothing has been written here yet.') + '</p>' +
         '</div>';
       return;
     }
     feedEl.innerHTML = poems.map(function(p, idx){
       return (
         '<article class="poem-card" style="animation-delay:' + (idx * 0.05) + 's" data-id="' + p.id + '">' +
-          '<div class="poem-meta"><span>' + escapeHtml(p.createdAtLabel || '') + '</span></div>' +
+          '<div class="poem-meta"><span class="poem-num">No. ' + p.number + '</span><span>' + escapeHtml(p.createdAtLabel || '') + '</span></div>' +
           '<h3 class="poem-title">' + escapeHtml(p.title) + '</h3>' +
           '<div class="poem-body">' + escapeHtml(p.body) + '</div>' +
           '<div class="poem-actions' + (isAdmin ? ' show' : '') + '">' +
@@ -754,10 +909,76 @@ service cloud.firestore {
     }).join('');
   }
 
+  /* -------------------------------------------------------
+     4b. SEARCH FILTER
+        Poems keep a stable "No. N" (ascending, oldest = 1)
+        assigned once on the full list, so numbers don't
+        shuffle around while someone is typing a search.
+     ------------------------------------------------------- */
+  var currentPoems = [];
+  var searchInput = document.getElementById('poemSearch');
+
+  function setCurrentPoems(poems){
+    var total = poems.length;
+    currentPoems = poems.map(function(p, i){
+      p.number = total - i; // list is newest-first; oldest poem is No. 1
+      return p;
+    });
+    applyFilterAndRender();
+  }
+
+  function applyFilterAndRender(){
+    var q = ((searchInput && searchInput.value) || '').trim().toLowerCase();
+    if (!q) { renderPoems(currentPoems, false); return; }
+    var filtered = currentPoems.filter(function(p){
+      return (p.title || '').toLowerCase().indexOf(q) !== -1 ||
+             (p.body  || '').toLowerCase().indexOf(q) !== -1;
+    });
+    renderPoems(filtered, true);
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', applyFilterAndRender);
+  }
+
+  /* -------------------------------------------------------
+     4c. CARD INTERACTIONS — a gentle 3D tilt that follows the
+        pointer, plus a soft ripple on tap/click, so the public
+        feed feels alive without turning into a full flip-card.
+     ------------------------------------------------------- */
+  feedEl.addEventListener('mousemove', function(e){
+    var card = e.target.closest ? e.target.closest('.poem-card') : null;
+    if (!card) return;
+    var r = card.getBoundingClientRect();
+    var px = (e.clientX - r.left) / r.width - 0.5;
+    var py = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform =
+      'perspective(800px) rotateX(' + (py * -5) + 'deg) rotateY(' + (px * 5) + 'deg) translateY(-3px)';
+  });
+  feedEl.addEventListener('mouseout', function(e){
+    var card = e.target.closest ? e.target.closest('.poem-card') : null;
+    if (card && (!e.relatedTarget || !card.contains(e.relatedTarget))) {
+      card.style.transform = '';
+    }
+  });
+  feedEl.addEventListener('click', function(e){
+    var card = e.target.closest ? e.target.closest('.poem-card') : null;
+    if (!card || e.target.closest('button')) return;
+    var rect = card.getBoundingClientRect();
+    var size = Math.max(rect.width, rect.height);
+    var ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    card.appendChild(ripple);
+    setTimeout(function(){ ripple.remove(); }, 650);
+  });
+
   var unsub = null;
   function subscribePoems(){
     if (!isConfigured) {
-      renderPoems(SAMPLE_POEMS);
+      setCurrentPoems(SAMPLE_POEMS.slice());
       return;
     }
     if (unsub) unsub();
@@ -771,7 +992,7 @@ service cloud.firestore {
         }
         poems.push({ id: doc.id, title: d.title, body: d.body, createdAtLabel: label });
       });
-      renderPoems(poems);
+      setCurrentPoems(poems);
     }, function(err){
       console.error('Feed error:', err);
       feedEl.innerHTML = '<div class="empty-state"><p>Could not load poems right now.</p></div>';
@@ -797,7 +1018,7 @@ service cloud.firestore {
     fabAdd.classList.toggle('show', on);
     // re-render current feed so edit/delete controls appear/disappear
     if (isConfigured) { /* onSnapshot already re-renders on next tick */ }
-    else { renderPoems(SAMPLE_POEMS); }
+    else { setCurrentPoems(SAMPLE_POEMS.slice()); }
   }
 
   if (isConfigured) {
@@ -946,6 +1167,90 @@ service cloud.firestore {
       composeError.textContent = 'Could not save: ' + err.message;
     });
   });
+
+  /* -------------------------------------------------------
+     7. LIGHT / DARK MODE
+        Preference is remembered locally; falls back to the
+        visitor's OS setting the very first time they land here.
+     ------------------------------------------------------- */
+  var themeToggle = document.getElementById('themeToggle');
+  var themeIcon = themeToggle ? themeToggle.querySelector('.theme-icon') : null;
+
+  function applyTheme(theme){
+    document.documentElement.setAttribute('data-theme', theme);
+    if (themeIcon) themeIcon.textContent = theme === 'dark' ? '☀' : '☾';
+    if (themeToggle) themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    try { localStorage.setItem('shishiTheme', theme); } catch (e) { /* private mode etc. */ }
+  }
+
+  (function initTheme(){
+    var saved = null;
+    try { saved = localStorage.getItem('shishiTheme'); } catch (e) {}
+    if (!saved) {
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      saved = prefersDark ? 'dark' : 'light';
+    }
+    applyTheme(saved);
+  })();
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function(){
+      var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
+  }
+
+  /* -------------------------------------------------------
+     8. VISITOR COUNT
+        Best-effort shared counter in Firestore (meta/visitors);
+        if that collection isn't covered by the project's
+        security rules, or Firebase isn't configured yet, this
+        quietly falls back to a per-device count instead — the
+        rest of the site (and the existing rules) stay untouched.
+     ------------------------------------------------------- */
+  var visitCountEl = document.getElementById('visitCount');
+  function showLocalVisitFallback(){
+    if (!visitCountEl) return;
+    try {
+      var key = 'shishiLocalVisits';
+      var count = parseInt(localStorage.getItem(key) || '0', 10) || 0;
+      if (!sessionStorage.getItem('shishiVisitCounted')) {
+        count += 1;
+        localStorage.setItem(key, String(count));
+        sessionStorage.setItem('shishiVisitCounted', '1');
+      }
+      visitCountEl.textContent = count + (count === 1 ? ' visit' : ' visits') + ' from this device';
+    } catch (e) { /* ignore */ }
+  }
+
+  if (visitCountEl) {
+    if (isConfigured) {
+      try {
+        var visitsRef = db.collection('meta').doc('visitors');
+        var alreadyCounted = false;
+        try { alreadyCounted = !!sessionStorage.getItem('shishiVisitCounted'); } catch (e) {}
+        if (!alreadyCounted) {
+          try { sessionStorage.setItem('shishiVisitCounted', '1'); } catch (e) {}
+          visitsRef.set(
+            { count: firebase.firestore.FieldValue.increment(1) },
+            { merge: true }
+          ).catch(function(){ /* rules may not cover this doc — that's fine */ });
+        }
+        visitsRef.onSnapshot(function(doc){
+          if (doc.exists && typeof doc.data().count === 'number') {
+            var n = doc.data().count;
+            visitCountEl.textContent = n.toLocaleString() + (n === 1 ? ' visitor' : ' visitors') + ' so far';
+          } else {
+            showLocalVisitFallback();
+          }
+        }, function(){ showLocalVisitFallback(); });
+      } catch (e) {
+        showLocalVisitFallback();
+      }
+    } else {
+      showLocalVisitFallback();
+    }
+  }
 
 })();
 </script>
